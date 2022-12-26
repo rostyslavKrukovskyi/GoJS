@@ -27,46 +27,65 @@ export class DiagramComponent {
 
   public ngAfterViewInit() {
 
-    this.myPalette = $(go.Palette, "myPaletteDiv");
-
-    this.myPalette.nodeTemplate =
-        $(go.Node, "Horizontal",
-        { locationObjectName: "TB", locationSpot: go.Spot.Center },
-        $(go.Shape,
-          { width: 50, height: 50, fill: "white" },
-          new go.Binding("fill", "color")),
-        $(go.TextBlock, { name: "TB" },
-          new go.Binding("text", "color"))
-      );
-    
-    // the list of data to show in the Palette
-  this.myPalette.model.nodeDataArray = [
-    { key: "C", color: "cyan" },
-    { key: "LC", color: "lightcyan" },
-    { key: "A", color: "aquamarine" },
-    { key: "T", color: "turquoise" }
-  ];
-
     this.diagram = $(go.Diagram, 'myDiagramDiv',
-      {
-        layout:
-          $(go.TreeLayout,
-            {
-              isOngoing: true,
-              // treeStyle: go.TreeLayout.StyleLastParents,
-              arrangement: go.TreeLayout.ArrangementHorizontal,
-              // properties for most of the tree:
-              angle: 90,
-              layerSpacing: 35,
-              // properties for the "last parents":
-              alternateAngle: 90,
-              alternateLayerSpacing: 35,
-              alternateAlignment: go.TreeLayout.AlignmentBus,
-              alternateNodeSpacing: 20
-            }),
-        'undoManager.isEnabled': true
-      }
+      // {
+      //   layout:
+      //     $(go.TreeLayout,
+      //       {
+      //         isOngoing: true,
+      //         treeStyle: go.TreeLayout.StyleLastParents,
+      //         arrangement: go.TreeLayout.ArrangementHorizontal,
+      //         // properties for most of the tree:
+      //         angle: 90,
+      //         layerSpacing: 35,
+      //         // properties for the "last parents":
+      //         alternateAngle: 90,
+      //         alternateLayerSpacing: 35,
+      //         alternateAlignment: go.TreeLayout.AlignmentBus,
+      //         alternateNodeSpacing: 20
+      //       }),
+      //   'undoManager.isEnabled': true
+      // }
     );
+
+  this.diagram.nodeTemplate =
+  $(go.Node, "Auto",
+    $(go.Shape, "Circle",
+      { fill: "white" },
+      new go.Binding("fill", "color"),
+      { portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer" }),
+    $(go.TextBlock, { margin: 5 },
+      new go.Binding("text", "key"))
+  );
+
+this.diagram.undoManager.isEnabled = true;
+
+// create the Palette
+var myPalette =
+  $(go.Palette, "myPaletteDiv");
+
+// the Palette's node template is different from the main Diagram's
+myPalette.nodeTemplate =
+  $(go.Node, "Horizontal",
+    $(go.Shape,
+      { width: 34, height: 34, fill: "white" },
+      new go.Binding("fill", "color")),
+    $(go.TextBlock,
+      new go.Binding("text", "color"))
+  );
+
+// the list of data to show in the Palette
+myPalette.model.nodeDataArray = [
+  { key: "C", color: "cyan", fig: 'Circle' },
+  { key: "LC", color: "lightcyan" },
+  { key: "A", color: "aquamarine" },
+  { key: "T", color: "turquoise" },
+  { key: "PB", color: "powderblue" },
+  { key: "LB", color: "lightblue" },
+  { key: "LSB", color: "lightskyblue" },
+  { key: "DSB", color: "deepskyblue" }
+];
+
 
     this.diagram.linkTemplate =
       $(go.Link,
@@ -75,16 +94,7 @@ export class DiagramComponent {
         $(go.Shape, { toArrow: "Standard" })
       );
 
-    // define the Node template
-    this.diagram.nodeTemplate =
-      $(go.Node, 'ForceDirectedLayout',
-        $(go.Shape, 'RoundedRectangle', { stroke: null },
-          new go.Binding('fill', 'color')
-        ),
-        $(go.TextBlock, { margin: 8 },
-          new go.Binding('text', 'key'))
-      );
-     
+    myPalette.nodeTemplateMap = this.diagram.nodeTemplateMap;
 
     this.diagram.model = this.model;
 
