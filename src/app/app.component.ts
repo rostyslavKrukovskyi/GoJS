@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import * as go from 'gojs';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,14 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.sass']
 })
 export class AppComponent {
-  title = 'GOJSMyTry';
+
+  public selectedNode = null;
+
+  public model: go.TreeModel = new go.TreeModel(
+  );
+
+  public setSelectedNode(node: any) {
+    this.selectedNode = node;
+  }
+
 }
