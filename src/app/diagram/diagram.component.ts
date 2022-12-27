@@ -20,7 +20,6 @@ export class DiagramComponent {
   @Output()
   public nodeClicked = new EventEmitter();
 
-
   constructor() {
     // this.diagram = null;
   }
@@ -50,12 +49,13 @@ export class DiagramComponent {
 
   this.diagram.nodeTemplate =
   $(go.Node, "Auto",
-    $(go.Shape, "Circle",
+    $(go.Shape,
       { fill: "white" },
       new go.Binding("fill", "color"),
+      new go.Binding("figure","fig"),
       { portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer" }),
-    $(go.TextBlock, { margin: 5 },
-      new go.Binding("text", "key"))
+    $(go.TextBlock, { margin: 15 },
+      new go.Binding("text", "text"))
   );
 
 this.diagram.undoManager.isEnabled = true;
@@ -70,20 +70,21 @@ myPalette.nodeTemplate =
     $(go.Shape,
       { width: 34, height: 34, fill: "white" },
       new go.Binding("fill", "color")),
+      new go.Binding("figure","fig"),
     $(go.TextBlock,
       new go.Binding("text", "color"))
   );
 
 // the list of data to show in the Palette
 myPalette.model.nodeDataArray = [
-  { key: "C", color: "cyan", fig: 'Circle' },
-  { key: "LC", color: "lightcyan" },
-  { key: "A", color: "aquamarine" },
-  { key: "T", color: "turquoise" },
-  { key: "PB", color: "powderblue" },
-  { key: "LB", color: "lightblue" },
-  { key: "LSB", color: "lightskyblue" },
-  { key: "DSB", color: "deepskyblue" }
+  { key: "C", color: "green", "fig": "Square", "text": "Alpha", group: "Alpha", isGroup: true },
+  { key: "LC", color: "lightcyan", "fig": "Circle", "text": "OOO"  },
+  { key: "A", color: "aquamarine", "fig": "Circle",  "text": "OOO" },
+  { key: "T", color: "turquoise", "fig": "Circle",  "text": "OOO" },
+  { key: "PB", color: "powderblue", "fig": "Circle",  "text": "OOO" },
+  { key: "LB", color: "lightblue", "fig": "Circle", "text": "OOO" },
+  { key: "LSB", color: "lightskyblue", "fig": "Circle", "text": "OOO" },
+  { key: "DSB", color: "deepskyblue", "fig": "Circle",  "text": "OOO" }
 ];
 
 
@@ -102,6 +103,7 @@ myPalette.model.nodeDataArray = [
     this.diagram.addDiagramListener('ChangedSelection', (e) => {
       const node = this.diagram.selection.first();
       this.nodeClicked.emit(node);
+      // alert('sdf')
     });
   }
 
