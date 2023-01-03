@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import * as go from 'gojs';
+import { Inspector } from './inspector/inspector.js';
 
 const $ = go.GraphObject.make;
 
@@ -18,14 +18,6 @@ export class DiagramComponent {
 
   @Output()
   public nodeClicked = new EventEmitter();
-
-  constructor() {
-    // this.diagram = null;
-  }
-
-  onSubmit(): void {
-    alert('dfd');
-  }
 
   public ngAfterViewInit() {
     this.myDiagram = $(
@@ -76,11 +68,7 @@ export class DiagramComponent {
     this.myDiagram.toolManager.draggingTool.isGridSnapEnabled = true;
 
     // when the document is modified, enable the "Save" button
-    this.myDiagram.addDiagramListener('Modified', (e) => {
-      // alert('modified');
-      // var button = document.getElementById("SaveButton");
-      // if (button) button.disabled = !myDiagram.isModified;
-    });
+    this.myDiagram.addDiagramListener('Modified', (e) => {});
 
     var nodeSelectionAdornmentTemplate = $(
       go.Adornment,
@@ -319,29 +307,32 @@ export class DiagramComponent {
       $(
         go.Shape, // the arrowhead
         { toArrow: 'Standard', stroke: null }
-      ),
-      $(
-        go.Panel,
-        'Auto',
-        new go.Binding('visible', 'isSelected').ofObject(),
-        $(
-          go.Shape,
-          'RoundedRectangle', // the link shape
-          { fill: '#F8F8F8', stroke: null }
-        ),
-        $(
-          go.TextBlock,
-          {
-            textAlign: 'center',
-            font: '10pt helvetica, arial, sans-serif',
-            stroke: '#919191',
-            margin: 2,
-            minSize: new go.Size(10, NaN),
-            editable: true,
-          },
-          new go.Binding('text').makeTwoWay()
-        )
       )
+      // $(
+      //   go.Panel,
+      //   'Auto',
+      //   new go.Binding('visible', 'isSelected').ofObject(),
+      //   $(
+      //     go.Shape,
+      //     'RoundedRectangle', // the link shape
+      //     { fill: '#F8F8F8', stroke: null }
+      //   )
+      // $(
+      //   go.TextBlock,
+      //   // 'transition',
+      //   {
+      //     textAlign: 'center',
+      //     background: 'white',
+      //     font: '10pt helvetica, arial, sans-serif',
+      //     stroke: 'black',
+      //     margin: 2,
+      //     minSize: new go.Size(10, 10),
+      //     editable: true,
+      //     alignmentFocus: new go.Spot(1, 0.5, 3, 0),
+      //   },
+      //   new go.Binding('text').makeTwoWay()
+      // )
+      // )
     );
 
     // initialize the Palette that is on the left side of the page
@@ -390,45 +381,90 @@ export class DiagramComponent {
             { toArrow: 'Standard', stroke: null }
           )
         ),
-        model: new go.GraphLinksModel(
-          [
-            // specify the contents of the Palette
-            {
-              text: 'Start',
-              figure: 'Ellipse',
-              size: '75 75',
-              fill: '#00AD5F',
-            },
-            { text: 'Step' },
-            {
-              text: 'DB',
-              figure: 'Database',
-              fill: 'lightgray',
-              height: 20,
-              width: 20,
-            },
-            { text: '???', figure: 'Diamond', fill: 'lightskyblue' },
-            { text: 'End', figure: 'Ellipse', size: '75 75', fill: '#CE0620' },
-            {
-              text: 'Comment',
-              figure: 'RoundedRectangle',
-              fill: 'lightyellow',
-            },
-          ],
-          [
-            // the Palette also has a disconnected Link, which the user can drag-and-drop
-            {
-              points: new go.List(/*go.Point*/).addAll([
-                new go.Point(0, 0),
-                new go.Point(30, 0),
-                new go.Point(30, 40),
-                new go.Point(60, 40),
-              ]),
-            },
-          ]
-        ),
+        model: new go.GraphLinksModel([
+          // specify the contents of the Palette
+          {
+            text: 'Checkout',
+            figure: 'RoundedRectangle',
+            fill: 'yellow',
+            size: '100 80',
+            comment: '...some info',
+          },
+          {
+            text: 'Code Scan',
+            figure: 'RoundedRectangle',
+            fill: 'yellow',
+            size: '100 80',
+            comment: '...some info',
+          },
+          {
+            text: 'Build',
+            figure: 'RoundedRectangle',
+            fill: 'yellow',
+            size: '100 80',
+            comment: '...some info',
+          },
+          {
+            text: 'Deploy',
+            figure: 'RoundedRectangle',
+            fill: 'yellow',
+            size: '100 80',
+            comment: '',
+          },
+          {
+            text: 'X',
+            fontSize: 30,
+            figure: 'Diamond',
+            fill: 'orange',
+            comment: '',
+          },
+          {
+            text: '',
+            figure: 'Ellipse',
+            size: '75 75',
+            fill: '#8BF26B',
+            comment: '',
+          },
+          {
+            text: '',
+            figure: 'Ellipse',
+            size: '75 75',
+            fill: 'orange',
+            comment: '',
+          },
+        ]),
       }
     );
+
+    this.myDiagram.addDiagramListener('ObjectSingleClicked', (e) => {
+      var part = e.subject.part;
+      if (!(part instanceof go.Link))
+        console.log('Clicked on ', part.data.rostik);
+    });
+
+    const inspector1 = new Inspector('myInspectorDiv', this.myDiagram, {
+      // allows for multiple nodes to be inspected at once
+      // multipleSelection: true,
+      // max number of node properties will be shown when multiple selection is true
+      // showLimit: 4,
+      // when multipleSelection is true, when showUnionProperties is true it takes the union of properties
+      // otherwise it takes the intersection of properties
+      showUnionProperties: true,
+      // uncomment this line to only inspect the named properties below instead of all properties on each object:
+      // includesOwnProperties: false,
+      properties: {
+        key: { show: false },
+        pos: { show: false },
+        loc: { show: false },
+        // text: { show: Inspector.showIfNode },
+        fill: { show: false },
+        points: { show: false },
+        from: { show: false },
+        to: { show: false },
+      },
+    });
+
+    inspector1.inspectObject(this.myDiagram.model.modelData);
   }
 
   // Define a function for creating a "port" that is normally transparent.
