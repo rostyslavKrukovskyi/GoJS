@@ -1,41 +1,53 @@
-#myDiagramDiv
-  width: 800px
-  height: 700px
-  border: 2px solid black
-  background-color: white
-  margin-right: 50px
+:host
+  #myDiagramDiv
+    width: 800px
+    height: 700px
+    border: 2px solid black
+    background-color: white
+    margin-right: 50px
 
-#myPaletteDiv
-  width: 150px
-  height: 700px
-  border: 2px solid black
-  background-color: white
-  margin-right: 50px
+  #myPaletteDiv
+    width: 150px
+    height: 700px
+    border: 2px solid black
+    background-color: white
+    margin-right: 50px
 
-#myInspectorDiv
-  width: 330px
-  height: 600px
+  #myInspectorDiv
+    width: 330px
+    height: 600px
 
-.myInspectorDiv
-  width: 330px
-  height: 700px
-  border: 2px solid black
-  
-table
-  background-color: red
+  .myInspectorDiv
+    width: 330px
+    height: 700px
+    border: 2px solid black
+    padding-left: 50px
 
-.wrapper
-  display: flex
-  flex-position: row
-  margin: 20px
+  .wrapper
+    display: flex
+    flex-position: row
+    margin: 20px
 
-.save-button
-  margin: 20px
-  background-color: green
-  width: 100px
-  height: 40px
-  font-size: 20px
-  border-radius: 15px
+  .save-button
+    margin: 20px
+    background-color: green
+    width: 100px
+    height: 40px
+    font-size: 20px
+    border-radius: 15px
 
-.inspectorTitle
-  margin: 15px
+  .inspectorTitle
+    margin-right: 25px
+    
+  ::ng-deep #myInspectorDiv 
+    input
+      background-color: lightgrey
+      color: black
+      font: bold 12px helvetica, sans-serif
+      border: 0px
+      padding: 2px
+      height: 29px
+      margin-left: 10px
+    font: bold 14px helvetica, sans-serif
+    ::first-letter
+      text-transform: capitalize
